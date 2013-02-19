@@ -72,7 +72,7 @@ prompt_git() {
   local ref dirty
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
     ZSH_THEME_GIT_PROMPT_DIRTY='±'
-    if ( $PARSE_GIT_DIRTY ) {
+    if ( $ZSH_THEME_CHECK_GIT ) {
       dirty=$(parse_git_dirty)
     } else {
       dirty='*'
