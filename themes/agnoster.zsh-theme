@@ -71,31 +71,24 @@ prompt_context() {
 prompt_git() {
   local ref dirty
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-    ZSH_THEME_GIT_PROMPT_DIRTY='±'
+    ZSH_THEME_GIT_PROMPT_MODIFIED='1'
+    ZSH_THEME_GIT_PROMPT_UNTRACKED='2'
     if ( $ZSH_THEME_CHECK_GIT ) {
       dirty=$(parse_git_dirty)
     } else {
       dirty='*'
     }
     ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git show-ref --head -s --abbrev |head -n1 2> /dev/null)"
-    if [[ -n $dirty && $dirty != '*' ]]; then
+    if [[ $dirty == '*' ]]; then
+      prompt_segment black green
+    elif [[ $dirty == "$ZSH_THEME_GIT_PROMPT_MODIFIED" ]]; then
       prompt_segment yellow black
+    elif [[ $dirty == "$ZSH_THEME_GIT_PROMPT_UNTRACKED" ]]; then
+      prompt_segment cyan black
     else
       prompt_segment green black
     fi
-
-    setopt promptsubst
-    autoload -Uz vcs_info
-
-    zstyle ':vcs_info:*' enable git
-    zstyle ':vcs_info:*' get-revision true
-    zstyle ':vcs_info:*' check-for-changes true
-    zstyle ':vcs_info:*' stagedstr '✚'
-    zstyle ':vcs_info:git:*' unstagedstr '●'
-    zstyle ':vcs_info:*' formats ' %u%c'
-    zstyle ':vcs_info:*' actionformats '%u%c'
-    vcs_info
-    echo -n "${ref/refs\/heads\//⭠ }${vcs_info_msg_0_}"
+    echo -n "${ref/refs\/heads\//⭠ }"
   fi
 }
 

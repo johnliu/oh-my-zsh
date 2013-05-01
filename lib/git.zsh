@@ -20,8 +20,10 @@ parse_git_dirty() {
     else
         GIT_STATUS=$(git status -s ${SUBMODULE_SYNTAX} -uno 2> /dev/null | tail -n1)
     fi
-    if [[ -n $(git status -s ${SUBMODULE_SYNTAX} -uno  2> /dev/null) ]]; then
-      echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
+    if [[ -n $(git status -s ${SUBMODULE_SYNTAX} -uno 2> /dev/null) ]]; then
+      echo "$ZSH_THEME_GIT_PROMPT_MODIFIED"
+    elif [[ -n $(git status -s ${SUBMODULE_SYNTAX} 2> /dev/null) ]]; then
+      echo "$ZSH_THEME_GIT_PROMPT_UNTRACKED"
     else
       echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
     fi
